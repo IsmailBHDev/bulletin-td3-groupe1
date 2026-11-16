@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+
 @DisplayName("Calcul d'un bulletin")
 class BulletinTest {
 
@@ -32,6 +33,11 @@ class BulletinTest {
     void moyenneDeTroisNotesDe60() {
         assertEquals(65, Bulletin.calculerMoyenne(180));
     }
+     @Test 
+    @DisplayName("La moyenne est arrondie à l'entier le plus proche") 
+    void moyenneArrondieALEntierLePlusProche() { 
+        assertEquals(60, Bulletin.calculerMoyenne(164)); 
+    } 
 
     // Exercice 4 : Tester les valeurs limites
     @ParameterizedTest(name = "moyenne {0} : {1}")
