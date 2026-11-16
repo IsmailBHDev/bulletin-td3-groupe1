@@ -1,1 +1,4 @@
-*.class
+*.classtarget/
+
+# Maven
+/target/
