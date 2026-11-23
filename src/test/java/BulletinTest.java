@@ -1,58 +1,66 @@
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.DisplayName;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-@DisplayName("Calcul d'un bulletin")
 class BulletinTest {
 
-    // Exercice 2 : Tester le calcul de la moyenne
+@ParameterizedTest
+@CsvSource({"-1", "101"})
+@DisplayName("Une note invalide doit être refusée")
+void noteInvalideEstRefusee(int note) {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Bulletin.verifierNote(note)
+    );
+}
+
+@ParameterizedTest
+@CsvSource({"0", "100"})
+@DisplayName("Une note valide doit être acceptée")
+void noteValideEstAcceptee(int note) {
+    assertEquals(note, Bulletin.verifierNote(note));
+}
+
+@ParameterizedTest(name = "moyenne {0} : {1}")
+@CsvSource({
+    "59, Échec",
+    "60, Réussite",
+    "61, Réussite"
+})
+@DisplayName("La réussite commence à 60")
+void mentionSelonLeSeuilDeReussite(int moyenne, String mentionAttendue) {
+    assertEquals(mentionAttendue, Bulletin.calculerMention(moyenne));
+}
+@Test
+@DisplayName("La moyenne est arrondie à l'entier le plus proche")
+void moyenneArrondieALEntierLePlusProche() {
+    assertEquals(60, Bulletin.calculerMoyenne(164));
+}
     @Test
     void moyenneDiviseLeTotalEtAjouteLeBonus() {
-        // Arrange
+        // Arrange : préparer les données
         int total = 240;
 
-        // Act
+        // Act : appeler la méthode testée
         int moyenne = Bulletin.calculerMoyenne(total);
 
-        // Assert
+        // Assert : vérifier le résultat attendu
         assertEquals(85, moyenne);
     }
 
-    // Exercice 2 : Tester la mention de réussite
     @Test
     void moyenneDe85DonneLaMentionReussite() {
         assertEquals("Réussite", Bulletin.calculerMention(85));
     }
 
-    // Exercice 3 : Corriger le test du collègue
     @Test
     void moyenneDeTroisNotesDe60() {
         assertEquals(65, Bulletin.calculerMoyenne(180));
     }
-     @Test 
-    @DisplayName("La moyenne est arrondie à l'entier le plus proche") 
-    void moyenneArrondieALEntierLePlusProche() { 
-        assertEquals(60, Bulletin.calculerMoyenne(164)); 
-    } 
 
-    // Exercice 4 : Tester les valeurs limites
-    @ParameterizedTest(name = "moyenne {0} : {1}")
-    @CsvSource({
-        "59, Échec",
-        "60, Réussite",
-        "61, Réussite"
-    })
-    @DisplayName("La réussite commence à 60")
-    void mentionSelonLeSeuilDeReussite(
-            int moyenne, String mentionAttendue) {
-
-        assertEquals(
-            mentionAttendue,
-            Bulletin.calculerMention(moyenne)
-        );
-    }
 }
